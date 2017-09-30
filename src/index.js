@@ -289,11 +289,14 @@ export default class Resizable extends React.Component<ResizableProps, State> {
 
   onMouseMove(event: MouseEvent | TouchEvent) {
     if (!this.state.isResizing) return;
-    const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-    const clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+    let clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    let clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
     const { direction, original, width, height } = this.state;
     const { lockAspectRatio } = this.props;
-    let { maxWidth, maxHeight, minWidth, minHeight } = this.props;
+    let { maxWidth, maxHeight, minWidth, minHeight, scale } = this.props;
+
+    clientX = parseInt(clientX / scale);
+    clientY = parseInt(clientY / scale);
 
     // TODO: refactor
     const parentSize = this.getParentSize();
