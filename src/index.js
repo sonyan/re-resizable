@@ -289,14 +289,11 @@ export default class Resizable extends React.Component<ResizableProps, State> {
 
   onMouseMove(event: MouseEvent | TouchEvent) {
     if (!this.state.isResizing) return;
-    let clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-    let clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+    const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    const clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
     const { direction, original, width, height } = this.state;
     const { lockAspectRatio } = this.props;
     let { maxWidth, maxHeight, minWidth, minHeight, scale } = this.props;
-
-    clientX = parseInt(clientX / scale);
-    clientY = parseInt(clientY / scale);
 
     // TODO: refactor
     const parentSize = this.getParentSize();
@@ -325,19 +322,19 @@ export default class Resizable extends React.Component<ResizableProps, State> {
     let newWidth = original.width;
     let newHeight = original.height;
     if (/right/i.test(direction)) {
-      newWidth = original.width + (clientX - original.x);
+      newWidth = original.width + parseInt((clientX - original.x) / scale);
       if (lockAspectRatio) newHeight = newWidth * ratio;
     }
     if (/left/i.test(direction)) {
-      newWidth = original.width - (clientX - original.x);
+      newWidth = original.width - parseInt((clientX - original.x) / scale);
       if (lockAspectRatio) newHeight = newWidth * ratio;
     }
     if (/bottom/i.test(direction)) {
-      newHeight = original.height + (clientY - original.y);
+      newHeight = original.height + parseInt((clientY - original.y) / scale);
       if (lockAspectRatio) newWidth = newHeight / ratio;
     }
     if (/top/i.test(direction)) {
-      newHeight = original.height - (clientY - original.y);
+      newHeight = original.height - parseInt((clientY - original.y) / scale);
       if (lockAspectRatio) newWidth = newHeight / ratio;
     }
 
